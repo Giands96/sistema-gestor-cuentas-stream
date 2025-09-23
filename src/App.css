@@ -13,3 +13,8 @@ html {
 *, *:before, *:after {
   box-sizing: inherit;
 }
+
+*{
+  font-family: 'DM Sans', sans-serif;
+
+}
