@@ -3,16 +3,16 @@ import { supabase } from "../supabaseClient.js";
 export const PlanesService = {
 
     getAll: async () => {
-        return await supabase.from('planes').select('*').eq('estado', true).order("id", { ascending: false });
+        return await supabase.from('cuentas').select('*').eq('activo', true).order("id_cuenta", { ascending: false });
     },
-    add: async (plan) => {
-        return await supabase.from("planes").insert([plan]).select();
+    add: async (cuenta) => {
+        return await supabase.from("cuentas").insert([cuenta]).select();
     },
-    update: async (id, updates) => {
-        return await supabase.from("planes").update(updates).eq("id", id).select();
+    update: async (id_cuenta, updates) => {
+        return await supabase.from("cuentas").update(updates).eq("id_cuenta", id_cuenta).select();
     },
-    softDelete: async (id) => {
-        return await supabase.from("planes").update({ estado: false }).eq("id", id).select();
+    softDelete: async (id_cuenta) => {
+        return await supabase.from("cuentas").update({ estado: false }).eq("id_cuenta", id_cuenta).select();
     }
 
 

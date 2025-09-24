@@ -7,7 +7,9 @@ import { Login } from './pages/Login'
 import './App.css'
 import { Planes } from './pages/Planes'
 import { Clientes }  from './pages/Clientes'
+import { Apps }  from './pages/Apps'
 import Button from '@mui/material/Button';
+import Categorias from './pages/Categorias'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -21,6 +23,8 @@ function App() {
       <Route path="/home" element={<Home />}>
         <Route path="clientes" element={<Clientes />} />
         <Route path="planes" element={<Planes />} />
+        <Route path="apps" element={<Apps />} />
+        <Route path="categorias" element={<Categorias />} />
       </Route>
     </Routes>
   )
