@@ -38,7 +38,7 @@ export const Planes = () => {
         fecha_inicio,
         fecha_vencimiento,
         activo,
-        clientes ( id_cliente, numero_celular ),
+        clientes ( id_cliente, numero_celular, nombre ),
         apps ( id_app, nombre_app ),
         categorias ( id_categoria, nombre_cat )
       `);
@@ -52,6 +52,7 @@ export const Planes = () => {
       setApps(appsData || []);
       setCategorias(categoriasData || []);
       setLoading(false);
+      
     };
 
     fetchData();
@@ -122,13 +123,23 @@ export const Planes = () => {
           </thead>
           <tbody>
             {cuentas.map((cuenta) => (
-              <tr key={cuenta.id_cuenta} className="hover:bg-gray-50 transition">
+              <tr key={cuenta.id_cuenta} className="hover:bg-gray-50 transition text-center">
                 <td className="px-4 py-2 border-b">{cuenta.apps?.nombre_app}</td>
                 <td className="px-4 py-2 border-b">{cuenta.categorias?.nombre_cat}</td>
-                <td className="px-4 py-2 border-b">{cuenta.clientes?.numero_celular}</td>
+                <td className="px-4 py-2 border-b">{cuenta.clientes?.numero_celular} - {cuenta.clientes?.nombre}</td>
                 <td className="px-4 py-2 border-b">{cuenta.correo}</td>
                 <td className="px-4 py-2 border-b">{cuenta.contraseña}</td>
-                <td className="px-4 py-2 border-b">{cuenta.tiempo}</td>
+                <td className="px-4 py-2 border-b">
+                  {cuenta.tiempo} - (
+                  {(() => {
+                    const hoy = new Date();
+                    const vencimiento = new Date(cuenta.fecha_vencimiento);
+                    const diffTime = vencimiento - hoy;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    return isNaN(diffDays) ? "N/A" : `${diffDays} días restantes`;
+                  })()}
+                  )
+                </td>
                 <td className="px-4 py-2 border-b">{cuenta.fecha_inicio}</td>
                 <td className="px-4 py-2 border-b">{cuenta.fecha_vencimiento}</td>
                 <td className="px-4 py-2 border-b">
@@ -154,6 +165,8 @@ export const Planes = () => {
           </div>
         )}
       </div>
+
+      
 
       {/* Modal Añadir Cuenta */}
       <Modal open={toggleAddModal} onClose={() => setToggleAddModal(false)}>
