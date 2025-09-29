@@ -45,7 +45,7 @@ export const Home = () => {
       <div className="w-1/6">
         <Navbar onLogout={handleLogout} user={user} />
       </div>
-      <div className="w-5/6 p-10 overflow-y-auto">
+      <div className="w-5/6 lg:m-12 xl:m-16 m-24 overflow-y-auto">
         <Outlet />
       </div>
       

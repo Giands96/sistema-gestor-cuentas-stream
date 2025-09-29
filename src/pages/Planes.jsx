@@ -97,7 +97,7 @@ export const Planes = () => {
   };
 
   return (
-    <div>
+    <div className="">
       <h1 className="text-xl font-bold mb-4">Gestión de Cuentas</h1>
       <button
         onClick={() => setToggleAddModal(true)}
@@ -106,67 +106,105 @@ export const Planes = () => {
         + Nueva Cuenta
       </button>
 
-      <div className="overflow-x-auto mt-6">
-        <table className="min-w-full bg-white rounded-lg shadow-md">
-          <thead>
-            <tr>
-              <th className="px-4 py-2 border-b">App</th>
-              <th className="px-4 py-2 border-b">Categoría</th>
-              <th className="px-4 py-2 border-b">Cliente</th>
-              <th className="px-4 py-2 border-b">Correo</th>
-              <th className="px-4 py-2 border-b">Contraseña</th>
-              <th className="px-4 py-2 border-b">Tiempo de Duracion</th>
-              <th className="px-4 py-2 border-b">Inicio</th>
-              <th className="px-4 py-2 border-b">Vencimiento</th>
-              <th className="px-4 py-2 border-b">Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cuentas.map((cuenta) => (
-              <tr key={cuenta.id_cuenta} className="hover:bg-gray-50 transition text-center">
-                <td className="px-4 py-2 border-b">{cuenta.apps?.nombre_app}</td>
-                <td className="px-4 py-2 border-b">{cuenta.categorias?.nombre_cat}</td>
-                <td className="px-4 py-2 border-b">{cuenta.clientes?.numero_celular} - {cuenta.clientes?.nombre}</td>
-                <td className="px-4 py-2 border-b">{cuenta.correo}</td>
-                <td className="px-4 py-2 border-b">{cuenta.contraseña}</td>
-                <td className="px-4 py-2 border-b">
-                  {cuenta.tiempo} - (
-                  {(() => {
-                    const hoy = new Date();
-                    const vencimiento = new Date(cuenta.fecha_vencimiento);
-                    const diffTime = vencimiento - hoy;
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    return isNaN(diffDays) ? "N/A" : `${diffDays} días restantes`;
-                  })()}
-                  )
-                </td>
-                <td className="px-4 py-2 border-b">{cuenta.fecha_inicio}</td>
-                <td className="px-4 py-2 border-b">{cuenta.fecha_vencimiento}</td>
-                <td className="px-4 py-2 border-b">
-                  {cuenta.activo ? (
-                    <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">
-                      Activo
-                    </span>
-                  ) : (
-                    <span className="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold">
-                      Inactivo
-                    </span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {loading && (
-          <div className="flex justify-center items-center mt-4">
-            <Box sx={{ display: "flex" }}>
-              <CircularProgress />
-            </Box>
-          </div>
-        )}
-      </div>
+<div className="overflow-x-auto mt-6">
+  {/* Tabla normal en pantallas medianas y grandes */}
+  <table className="hidden md:table w-full bg-white rounded-lg shadow-md">
+    <thead>
+      <tr>
+        <th className="px-4 py-2 border-b">App</th>
+        <th className="px-4 py-2 border-b">Categoría</th>
+        <th className="px-4 py-2 border-b">Cliente</th>
+        <th className="px-4 py-2 border-b">Correo</th>
+        <th className="px-4 py-2 border-b">Contraseña</th>
+        <th className="px-4 py-2 border-b">Tiempo</th>
+        <th className="px-4 py-2 border-b">Inicio</th>
+        <th className="px-4 py-2 border-b">Vencimiento</th>
+        <th className="px-4 py-2 border-b">Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {cuentas.map((cuenta) => (
+        <tr key={cuenta.id_cuenta} className="hover:bg-gray-50 transition text-center">
+          <td className="px-4 py-2 border-b">{cuenta.apps?.nombre_app}</td>
+          <td className="px-4 py-2 border-b">{cuenta.categorias?.nombre_cat}</td>
+          <td className="px-4 py-2 border-b">{cuenta.clientes?.numero_celular} - {cuenta.clientes?.nombre}</td>
+          <td className="px-4 py-2 border-b">{cuenta.correo}</td>
+          <td className="px-4 py-2 border-b">{cuenta.contraseña}</td>
+          <td className="px-4 py-2 border-b">
+            {cuenta.tiempo} - (
+            {(() => {
+              const hoy = new Date();
+              const vencimiento = new Date(cuenta.fecha_vencimiento);
+              const diffTime = vencimiento - hoy;
+              const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+              return isNaN(diffDays) ? "N/A" : `${diffDays} días restantes`;
+            })()}
+            )
+          </td>
+          <td className="px-4 py-2 border-b">{cuenta.fecha_inicio}</td>
+          <td className="px-4 py-2 border-b">{cuenta.fecha_vencimiento}</td>
+          <td className="px-4 py-2 border-b">
+            {cuenta.activo ? (
+              <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">
+                Activo
+              </span>
+            ) : (
+              <span className="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold">
+                Inactivo
+              </span>
+            )}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
 
-      
+  {/* Vista móvil en tarjetas */}
+  <div className="md:hidden space-y-4">
+    {cuentas.map((cuenta) => (
+      <div key={cuenta.id_cuenta} className="border rounded-lg p-4 shadow bg-white">
+        <p><span className="font-semibold">App:</span> {cuenta.apps?.nombre_app}</p>
+        <p><span className="font-semibold">Categoría:</span> {cuenta.categorias?.nombre_cat}</p>
+        <p><span className="font-semibold">Cliente:</span> {cuenta.clientes?.numero_celular} - {cuenta.clientes?.nombre}</p>
+        <p><span className="font-semibold">Correo:</span> {cuenta.correo}</p>
+        <p><span className="font-semibold">Contraseña:</span> {cuenta.contraseña}</p>
+        <p>
+          <span className="font-semibold">Tiempo:</span> {cuenta.tiempo} - (
+          {(() => {
+            const hoy = new Date();
+            const vencimiento = new Date(cuenta.fecha_vencimiento);
+            const diffTime = vencimiento - hoy;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return isNaN(diffDays) ? "N/A" : `${diffDays} días restantes`;
+          })()}
+          )
+        </p>
+        <p><span className="font-semibold">Inicio:</span> {cuenta.fecha_inicio}</p>
+        <p><span className="font-semibold">Vencimiento:</span> {cuenta.fecha_vencimiento}</p>
+        <p>
+          <span className="font-semibold">Estado:</span>{" "}
+          {cuenta.activo ? (
+            <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">
+              Activo
+            </span>
+          ) : (
+            <span className="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold">
+              Inactivo
+            </span>
+          )}
+        </p>
+      </div>
+    ))}
+  </div>
+
+  {loading && (
+    <div className="flex justify-center items-center mt-4">
+      <Box sx={{ display: "flex" }}>
+        <CircularProgress />
+      </Box>
+    </div>
+  )}
+</div>
 
       {/* Modal Añadir Cuenta */}
       <Modal open={toggleAddModal} onClose={() => setToggleAddModal(false)}>

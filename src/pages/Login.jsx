@@ -10,11 +10,12 @@ import { createClient } from '@supabase/supabase-js';
 
 
 export const Login = () => {
+  // Inicializar Supabase
   const supabaseUrl = import.meta.env.VITE_SUPABASEURL;
   const supabaseKey = import.meta.env.VITE_SUPABASEKEY;
   const supabase = createClient(supabaseUrl, supabaseKey);
   
-
+// Estados para el formulario
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -31,20 +32,15 @@ export const Login = () => {
       email,
       password,
     });
-
     if (error) {
       setError(error.message);
       console.log('Error al iniciar sesión:', error.message);
     } else {
-      console.log('Inicio de sesión exitoso.', data);
       setError(null);
-      // Aquí puedes redirigir al usuario a otra página o actualizar el estado de la aplicación
-      navigate('/home');
+      navigate("/home/inicio");
     }
 
   }
-
-
 
   return (
 

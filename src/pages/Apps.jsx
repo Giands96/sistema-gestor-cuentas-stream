@@ -29,6 +29,8 @@ export const Apps = () => {
   const [formApp, setFormApp] = useState({
     nombre_app: "",
     id_categoria: null,
+    precio_costo: "",
+    precio_venta: "",
   });
 
   // fetch apps (incluye relación categorias para mostrar nombre_cat)
@@ -41,7 +43,11 @@ export const Apps = () => {
         nombre_app,
         id_categoria,
         estado,
-        categorias ( id_categoria, nombre_cat )
+        categorias ( id_categoria, nombre_cat ),
+        precio_costo,
+        precio_venta,
+        ganancia
+        
       `)
       .eq("estado", true)
       .order("id_app", { ascending: false });
@@ -87,7 +93,7 @@ export const Apps = () => {
 
   const handleOpenAdd = () => {
     setEditId(null);
-    setFormApp({ nombre_app: "", id_categoria: null });
+    setFormApp({ nombre_app: "", id_categoria: null, precio_costo: "", precio_venta: "" });
     setToggleAddModal(true);
   };
 
@@ -96,6 +102,8 @@ export const Apps = () => {
     setFormApp({
       nombre_app: app.nombre_app || "",
       id_categoria: app.id_categoria || null,
+      precio_costo: app.precio_costo || "",
+      precio_venta: app.precio_venta || "",
     });
     setToggleAddModal(true);
   };
@@ -110,19 +118,24 @@ export const Apps = () => {
     if (!formApp.id_categoria) {
       return alert("Selecciona la categoría.");
     }
+    if (!formApp.precio_costo) {
+      return alert("Selecciona el costo.");
+    }
+    if (!formApp.precio_venta) {
+      return alert("Selecciona el precio de venta.");
+    }
 
     // payload: nombre en minúsculas para coincidir con el icono
     const payload = {
       nombre_app: formApp.nombre_app.toLowerCase().trim(),
       id_categoria: formApp.id_categoria,
+      precio_costo: parseFloat(formApp.precio_costo),
+      precio_venta: parseFloat(formApp.precio_venta),
       estado: true,
     };
 
     if (editId) {
-      const { error } = await supabase
-        .from("apps")
-        .update(payload)
-        .eq("id_app", editId);
+      const { error } = await supabase.from("apps").update(payload).eq("id_app", editId);
       if (error) {
         console.error("Error actualizando app:", error);
         return alert("Error al actualizar. Revisa la consola.");
@@ -169,15 +182,21 @@ export const Apps = () => {
               <th className="px-4 py-2 border-b">Icono</th>
               <th className="px-4 py-2 border-b">Nombre</th>
               <th className="px-4 py-2 border-b">Categoría</th>
+              <th className="px-4 py-2 border-b">Precio Costo</th>
+              <th className="px-4 py-2 border-b">Precio Venta</th>
+              <th className="px-4 py-2 border-b">Ganancia</th>
               <th className="px-4 py-2 border-b">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {apps.map((app) => (
-              <tr key={app.id_app} className="hover:bg-gray-50 transition text-center items-center ">
+              <tr
+                key={app.id_app}
+                className="hover:bg-gray-50 transition text-center items-center "
+              >
                 <td className="px-4 py-2 border-b">
                   <img
-                    src={getIconPath(app.nombre_app) }
+                    src={getIconPath(app.nombre_app)}
                     alt={app.nombre_app}
                     width="32"
                     height="32"
@@ -191,6 +210,19 @@ export const Apps = () => {
                 <td className="px-4 py-2 border-b">
                   {app.categorias?.nombre_cat || "-"}
                 </td>
+                <td className="px-4 py-2 border-b">
+                  S/ {(app?.precio_costo).toFixed(2) || "-"}
+                </td>
+                <td className="px-4 py-2 border-b">
+                  S/ {(app?.precio_venta).toFixed(2) || "-"}
+                </td>
+                <td className="px-4 py-2 border-b">
+                  S/{" "}
+                  {app.precio_venta && app.precio_costo
+                    ? (app.precio_venta - app.precio_costo).toFixed(2)
+                    : "-"}
+                </td>
+
                 <td className="px-4 py-2 border-b">
                   <button
                     onClick={() => handleEdit(app)}
@@ -229,9 +261,13 @@ export const Apps = () => {
       {/* Modal Añadir / Editar */}
       <Modal open={toggleAddModal} onClose={() => setToggleAddModal(false)}>
         <div className="bg-white p-6 rounded shadow-lg max-w-md mx-auto mt-20">
-          <h2 className="text-lg font-bold mb-4">{editId ? "Editar App" : "Nueva App"}</h2>
+          <h2 className="text-lg font-bold mb-4">
+            {editId ? "Editar App" : "Nueva App"}
+          </h2>
           <form onSubmit={handleAddOrUpdate} className="space-y-3">
-            <label className="block text-sm font-medium">Nombre de la App</label>
+            <label className="block text-sm font-medium">
+              Nombre de la App
+            </label>
             <input
               name="nombre_app"
               value={formApp.nombre_app}
@@ -256,6 +292,24 @@ export const Apps = () => {
                 </option>
               ))}
             </select>
+            <label className="block text-sm font-medium">Precio de Costo</label>
+            <input
+              name="precio_costo"
+              value={formApp.precio_costo}
+              onChange={handleChange}
+              placeholder="Ej: 5.50"
+              className="w-full border px-3 py-2 rounded"
+              required
+            />
+            <label className="block text-sm font-medium">Precio de Venta</label>
+            <input
+              name="precio_venta"
+              value={formApp.precio_venta}
+              onChange={handleChange}
+              placeholder="Ej: 5.50"
+              className="w-full border px-3 py-2 rounded"
+              required
+            />
 
             <div className="flex gap-2">
               <button
@@ -266,7 +320,10 @@ export const Apps = () => {
               </button>
               <button
                 type="button"
-                onClick={() => { setToggleAddModal(false); setEditId(null); }}
+                onClick={() => {
+                  setToggleAddModal(false);
+                  setEditId(null);
+                }}
                 className="flex-1 w-full bg-gray-200 py-2 rounded hover:bg-gray-300"
               >
                 Cancelar

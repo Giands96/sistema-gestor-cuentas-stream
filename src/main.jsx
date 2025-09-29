@@ -5,6 +5,7 @@ import { Login } from './pages/Login.jsx'
 import { Home } from './pages/Home.jsx'
 import { Planes } from './pages/Planes.jsx'
 import { Clientes } from './pages/Clientes.jsx'
+import { Inicio } from './pages/Inicio.jsx'
 
 import App from './App.jsx'
 
