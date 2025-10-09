@@ -107,32 +107,56 @@ export const Planes = () => {
       </button>
 
 <div className="overflow-x-auto mt-6">
-  {/* Tabla normal en pantallas medianas y grandes */}
-  <table className="hidden md:table w-full bg-white rounded-lg shadow-md">
-    <thead>
-      <tr>
-        <th className="px-4 py-2 border-b">App</th>
-        <th className="px-4 py-2 border-b">Categoría</th>
-        <th className="px-4 py-2 border-b">Cliente</th>
-        <th className="px-4 py-2 border-b">Correo</th>
-        <th className="px-4 py-2 border-b">Contraseña</th>
-        <th className="px-4 py-2 border-b">Tiempo</th>
-        <th className="px-4 py-2 border-b">Inicio</th>
-        <th className="px-4 py-2 border-b">Vencimiento</th>
-        <th className="px-4 py-2 border-b">Estado</th>
-      </tr>
-    </thead>
-    <tbody>
-      {cuentas.map((cuenta) => (
-        <tr key={cuenta.id_cuenta} className="hover:bg-gray-50 transition text-center">
-          <td className="px-4 py-2 border-b">{cuenta.apps?.nombre_app}</td>
-          <td className="px-4 py-2 border-b">{cuenta.categorias?.nombre_cat}</td>
-          <td className="px-4 py-2 border-b">{cuenta.clientes?.numero_celular} - {cuenta.clientes?.nombre}</td>
-          <td className="px-4 py-2 border-b">{cuenta.correo}</td>
-          <td className="px-4 py-2 border-b">{cuenta.contraseña}</td>
-          <td className="px-4 py-2 border-b">
-            {cuenta.tiempo} - (
-            {(() => {
+  /* Tabla normal en pantallas medianas y grandes */
+    <table className="hidden md:table w-full bg-white rounded-lg shadow-md">
+      <thead>
+        <tr>
+          <th className="px-4 py-2 border-b">App</th>
+          <th className="px-4 py-2 border-b">Categoría</th>
+          <th className="px-4 py-2 border-b">Cliente</th>
+          <th className="px-4 py-2 border-b">Correo</th>
+          <th className="px-4 py-2 border-b">Contraseña</th>
+          <th className="px-4 py-2 border-b">Tiempo</th>
+          <th className="px-4 py-2 border-b">Inicio</th>
+          <th className="px-4 py-2 border-b">Vencimiento</th>
+          <th className="px-4 py-2 border-b">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {cuentas.map((cuenta) => (
+          <tr key={cuenta.id_cuenta} className="hover:bg-gray-50 transition text-center">
+            <td
+              className={
+                cuenta.apps?.nombre_app === "Netflix"
+                  ? "px-4 py-2 border-b bg-red-500 text-white"
+                  : cuenta.apps?.nombre_app === "universal"
+                  ? "px-4 py-2 border-b bg-amber-200"
+                  : cuenta.apps?.nombre_app === "crunchyroll"
+                  ? "px-4 py-2 border-b bg-orange-400 text-black"
+                  : cuenta.apps?.nombre_app === "disney"
+                  ? "px-4 py-2 border-b bg-blue-800 text-white"
+                  : cuenta.apps?.nombre_app === "spotify"
+                  ? "px-4 py-2 border-b bg-green-400 text-black"
+                  : cuenta.apps?.nombre_app === "hbo max"
+                  ? "px-4 py-2 border-b bg-purple-600 text-white"
+                  : cuenta.apps?.nombre_app === "directv go"
+                  ? "px-4 py-2 border-b bg-blue-600 text-white"
+                  : cuenta.apps?.nombre_app === "amazon"
+                  ? "px-4 py-2 border-b bg-blue-950 text-white"
+                  : "px-4 py-2 border-b"
+              }
+            >
+              {cuenta.apps?.nombre_app
+                ? cuenta.apps.nombre_app.charAt(0).toUpperCase() + cuenta.apps.nombre_app.slice(1)
+                : ""}
+            </td>
+            <td className="px-4 py-2 border-b">{cuenta.categorias?.nombre_cat}</td>
+            <td className="px-4 py-2 border-b">{cuenta.clientes?.numero_celular} - {cuenta.clientes?.nombre}</td>
+            <td className="px-4 py-2 border-b">{cuenta.correo}</td>
+            <td className="px-4 py-2 border-b">{cuenta.contraseña}</td>
+            <td className="px-4 py-2 border-b">
+              {cuenta.tiempo} - (
+              {(() => {
               const hoy = new Date();
               const vencimiento = new Date(cuenta.fecha_vencimiento);
               const diffTime = vencimiento - hoy;
